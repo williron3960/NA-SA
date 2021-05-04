@@ -1,0 +1,20 @@
+version: "3"
+services:
+  lab7_db:
+    container_name: lab7_postgres
+    image: postgres:11
+    ports:
+      - "${POSTGRES_PORT}:5432"
+    env_file:
+      - .env
+    restart: always
+  web_server:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: bash -c "pipenv run uvicorn main:app --host 0.0.0.0 --port 80"
+    restart: always
+    ports:
+      - "80:80"
+    depends_on:
+      - lab7_db
