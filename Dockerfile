@@ -13,4 +13,4 @@ COPY . /code/
 
 WORKDIR /code/app
 
-EXPOSE 8000
+EXPOSE 80
