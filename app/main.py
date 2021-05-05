@@ -1,5 +1,5 @@
 from fastapi import FastAPI, Response, status, Form
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, PlainTextResponse
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy import create_engine, MetaData, Table, Column, Integer, String ,DateTime ,Boolean
 from typing import List, Optional
@@ -46,7 +46,7 @@ async def set_value(key : str, value: str = Form(...)):
             create_at = gDate
         )
         await database.execute(query)
-        return 'OK'
+        return PlainTextResponse(value, 200)
     except :
         query = items.update().\
         where(items.c.key == key).\
@@ -55,7 +55,7 @@ async def set_value(key : str, value: str = Form(...)):
             create_at = gDate
         )
         await database.execute(query)
-        return 'OK'
+        return PlainTextResponse(value, 200)
 
 @app.get('/get/{key}' )
 async def find_value(key : str):
