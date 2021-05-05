@@ -66,7 +66,7 @@ async def set_value(key : Optional[str] = Form(None), value: Optional[str] =  Fo
     try :
         query = items.insert().values(
             value = value,
-            key = key,
+            key = str(),
             create_at = gDate
         )
         await database.execute(query)
@@ -95,7 +95,7 @@ async def find_value(key : str = None):
 @app.get('/get/' )
 async def find_value(key : Optional[str] = Form(None)):
     try :
-        query = items.select().where(items.c.key == key )
+        query = items.select().where(items.c.key == str() )
         query = await database.fetch_one(query)
         value = model.Item(**query).dict()["value"]
         return PlainTextResponse(value, 200)
