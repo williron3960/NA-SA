@@ -37,7 +37,7 @@ async def shutdown():
 
 
 @app.post('/set/{key}' )
-async def set_value(key : str, value: str = Form(...)):
+async def set_value(key : str, value: Optional[str] =  Form(None) ):
     gDate = datetime.datetime.now()
     try :
         query = items.insert().values(
@@ -48,14 +48,14 @@ async def set_value(key : str, value: str = Form(...)):
         await database.execute(query)
         return 'OK'
     except :
-        query = items.update().\
-        where(items.c.key == key).\
-        values(
-            value = value,
-            create_at = gDate
-        )
-        await database.execute(query)
-        return 'OK'
+            query = items.update().\
+            where(items.c.key == key).\
+            values(
+                value = value,
+                create_at = gDate
+            )
+            await database.execute(query)
+            return 'OK'
 
 @app.get('/get/{key}' )
 async def find_value(key : str):
@@ -65,4 +65,3 @@ async def find_value(key : str):
         return PlainTextResponse(model.Item(**query).dict()["value"], 200)
     except :
         return 'key not found!'
-
