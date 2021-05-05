@@ -22,11 +22,11 @@ metadata = sqlalchemy.MetaData()
 
 # define table
 items = sqlalchemy.Table(
-    'result',
+    'result2',
     metadata,
-    sqlalchemy.Column('key' , String, primary_key = True),
+    sqlalchemy.Column('key' , String),
     sqlalchemy.Column('value' , String),
-    sqlalchemy.Column('create_at', DateTime, default = datetime.datetime.utcnow)
+    sqlalchemy.Column('create_at', DateTime, default = datetime.datetime.utcnow, primary_key = True)
 )
 
 engine = create_engine(
