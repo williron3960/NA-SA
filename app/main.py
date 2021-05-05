@@ -59,6 +59,10 @@ async def set_value(key : str, value: str = Form(...)):
 
 @app.get('/get/{key}' )
 async def find_value(key : str):
-    query = items.select().where(items.c.key == key )
-    query = await database.fetch_one(query)
-    return PlainTextResponse(model.Item(**query).dict()["value"], 200)
+    try :
+        query = items.select().where(items.c.key == key )
+        query = await database.fetch_one(query)
+        return PlainTextResponse(model.Item(**query).dict()["value"], 200)
+    except :
+        return 'key not found!'
+
