@@ -12,6 +12,7 @@ databases = "==0.4.3"
 asyncpg = "==0.22.0"
 starlette = "==0.13.6"
 commitizen = "*"
+python-multipart = "*"
 
 [dev-packages]
 

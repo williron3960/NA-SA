@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Response, status
+from fastapi import FastAPI, Response, status, Form
 from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy import create_engine, MetaData, Table, Column, Integer, String ,DateTime ,Boolean
@@ -35,31 +35,30 @@ async def startup():
 async def shutdown():
     await database.disconnect()
 
-@app.post('/set/{value}' )
-async def set_value(value: str):
+
+@app.post('/set/{key}' )
+async def set_value(key : str, value: str = Form(...)):
     gDate = datetime.datetime.now()
     try :
         query = items.insert().values(
             value = value,
+            key = key,
             create_at = gDate
         )
         await database.execute(query)
-        return {
-            'value' : value
-        }
+        return 'OK'
     except :
         query = items.update().\
-        where(items.c.value == value).\
+        where(items.c.key == key).\
         values(
             value = value,
             create_at = gDate
         )
         await database.execute(query)
-        return {
-            'value' : value + '_updated'
-        }
+        return 'OK'
 
-@app.get('/get/{value}' )
-async def find_value(value : str):
-    query = items.select().where(items.c.value == value )
-    return await database.fetch_one(query)
+@app.get('/get/{key}' )
+async def find_value(key : str):
+    query = items.select().where(items.c.key == key )
+    query = await database.fetch_one(query)
+    return model.Item(**query).dict()["value"]

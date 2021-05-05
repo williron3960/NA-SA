@@ -24,7 +24,8 @@ metadata = sqlalchemy.MetaData()
 items = sqlalchemy.Table(
     'result',
     metadata,
-    sqlalchemy.Column('value' , String, primary_key = True),
+    sqlalchemy.Column('key' , String, primary_key = True),
+    sqlalchemy.Column('value' , String),
     sqlalchemy.Column('create_at', DateTime, default = datetime.datetime.utcnow)
 )
 
