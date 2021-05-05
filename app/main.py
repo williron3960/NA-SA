@@ -22,6 +22,7 @@ origins = [
 # fastapi
 app = FastAPI()
 
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
@@ -42,23 +43,42 @@ async def shutdown():
 @app.post('/set/{key}' )
 async def set_value(key : Optional[str] = None, value: Optional[str] =  Form(None) ):
     gDate = datetime.datetime.now()
-    try :
-        query = items.insert().values(
-            value = value,
-            key = key,
-            create_at = gDate
-        )
-        await database.execute(query)
-        return 'OK'
-    except :
-            query = items.update().\
-            where(items.c.key == key).\
-            values(
+    if value != None:
+        try :
+            query = items.insert().values(
                 value = value,
+                key = key,
                 create_at = gDate
             )
             await database.execute(query)
             return 'OK'
+        except :
+                query = items.update().\
+                where(items.c.key == key).\
+                values(
+                    value = value,
+                    create_at = gDate
+                )
+                await database.execute(query)
+                return 'OK'
+    else:
+        try :
+            query = items.insert().values(
+                value = str(),
+                key = key,
+                create_at = gDate
+            )
+            await database.execute(query)
+            return 'OK'
+        except :
+                query = items.update().\
+                where(items.c.key == key).\
+                values(
+                    value = str(),
+                    create_at = gDate
+                )
+                await database.execute(query)
+                return 'OK'
 
 @app.post('/set/' )
 async def set_value(key : Optional[str] = Form(None), value: Optional[str] =  Form(None) ):
