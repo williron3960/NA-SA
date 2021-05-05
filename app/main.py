@@ -46,7 +46,7 @@ async def set_value(key : str, value: str = Form(...)):
             create_at = gDate
         )
         await database.execute(query)
-        return PlainTextResponse(value, 200)
+        return 'OK'
     except :
         query = items.update().\
         where(items.c.key == key).\
@@ -55,10 +55,10 @@ async def set_value(key : str, value: str = Form(...)):
             create_at = gDate
         )
         await database.execute(query)
-        return PlainTextResponse(value, 200)
+        return 'OK'
 
 @app.get('/get/{key}' )
 async def find_value(key : str):
     query = items.select().where(items.c.key == key )
     query = await database.fetch_one(query)
-    return model.Item(**query).dict()["value"]
+    return PlainTextResponse(model.Item(**query).dict()["value"], 200)
